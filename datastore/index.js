@@ -3,14 +3,29 @@ const path = require('path');
 const _ = require('underscore');
 const counter = require('./counter');
 
+// could we be using items as RAM and writing the file as storage
 var items = {};
 
 // Public API - Fix these CRUD functions ///////////////////////////////////////
 
 exports.create = (text, callback) => {
-  var id = counter.getNextUniqueId();
-  items[id] = text;
-  callback(null, { id, text });
+  counter.getNextUniqueId((err, paddedId) => {
+    // items[paddedID] = text;
+
+
+    let newPath = (id) => (path.join(exports.dataDir, `${id}.txt`));
+
+    var newFile = newPath(paddedId);
+    fs.writeFile(newFile, text, (err) => {
+      if (err) {
+        throw ('error writing counter');
+      } else {
+        callback(null, { paddedId, text });
+      }
+    });
+
+  });
+
 };
 
 exports.readAll = (callback) => {
