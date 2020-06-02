@@ -39,22 +39,23 @@ const writeCounter = (count, callback) => {
 // Public API - Fix this function //////////////////////////////////////////////
 
 exports.getNextUniqueId = (callback) => {
-  // counter = counter + 1;
-  // return zeroPaddedNumber(counter);
-
-  // call readCounter, callback function
   readCounter((err, counter) => {
     counter++;
-    console.log('this is before write counter')
+    if (err){
+      callback(err);
+    } else {
+      writeCounter(counter, (err, result) => {
 
-    writeCounter(counter, (err, result) => {
-      callback(err, result);
-    });
+        if(err){
+          callback(err);
+        } else {
+          callback(null, result);
+        }
 
-    console.log('this is after write counter')
+      });
+    }
   });
 
-console.log("this is end of unique id ");
 };
 
 

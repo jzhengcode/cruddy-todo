@@ -4,12 +4,29 @@ const _ = require('underscore');
 const counter = require('./counter');
 
 // could we be using items as RAM and writing the file as storage
-var items = {};
+// var items = {};
 
 // Public API - Fix these CRUD functions ///////////////////////////////////////
 
 exports.create = (text, callback) => {
-  counter.getNextUniqueId((err, paddedId) => {
+  counter.getNextUniqueId((err, id) => {
+    if (err){
+      // let's come back here later
+      callback(err);
+    } else {
+      let newPath = (id) => (path.join(exports.dataDir, `${id}.txt`));
+
+      var newFile = newPath(id);
+      fs.writeFile(newFile, text, (err) => {
+      if (err) {
+        callback(err);
+      } else {
+        callback(null, { id, text });
+      }
+      });
+
+    }
+    // console.log(paddedID);
     // items[paddedID] = text;
 /*
  fs.writeFile(exports.dataDir, text, (err) => {
@@ -20,17 +37,7 @@ exports.create = (text, callback) => {
 // make a function that joins dataDir with id -> take in an id
   // join dataDir with id.txt
   // return ^
-  console.log('this is inside create invocation of getUniqId')
-  let newPath = (id) => (path.join(exports.dataDir, `${id}.txt`));
 
-   var newFile = newPath(paddedId);
-   fs.writeFile(newFile, text, (err) => {
-    if (err) {
-      throw ('error writing counter');
-    } else {
-      callback(null, { paddedId, text });
-    }
-   });
     // if (err) {
     //   throw ('error writing counter');
     // } else {
@@ -44,10 +51,30 @@ exports.create = (text, callback) => {
 };
 
 exports.readAll = (callback) => {
-  var data = _.map(items, (text, id) => {
-    return { id, text };
-  });
-  callback(null, data);
+  // use fs.readdir to get a list of all files
+    //take each file store it in an array
+
+  var data = [];
+  data.push(fs.readdir((exports.dataDir,(err, data) => {
+    if (err) {
+      throw ('error reading all');
+    } else {
+      callback(null, data);
+    }
+  })))
+  console.log(data);
+  // var data = _.map(items, (text, id) => {
+  //   return { id, text };
+  // });
+
+  // fs.readdir((exports.dataDir,(err) => {
+  //   if (err) {
+  //     throw ('error reading all');
+  //   } else {
+  //     callback(null, data);
+  //   }
+  // })
+
 };
 
 exports.readOne = (id, callback) => {
