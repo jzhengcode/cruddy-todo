@@ -76,7 +76,9 @@ exports.readAll = (callback) => {
   // })
 
 };
-
+/*
+Next, refactor the readOne to read a todo item from the dataDir based on the message's id. For this function, you must read the contents of the todo item file and respond with it to the client.
+*/
 exports.readOne = (id, callback) => {
   var text = items[id];
   if (!text) {
