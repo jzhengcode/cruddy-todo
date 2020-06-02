@@ -9,24 +9,29 @@ var items = {};
 // Public API - Fix these CRUD functions ///////////////////////////////////////
 
 exports.create = (text, callback) => {
-  counter.getNextUniqueId((err, paddedId) => {
-    // items[paddedID] = text;
+  counter.getNextUniqueId((err, id) => {
+    if (err) {
+      // let's come back here later
+      callback(err);
+    } else {
+      let newPath = (id) => (path.join(exports.dataDir, `${id}.txt`));
 
+      var newFile = newPath(id);
+      fs.writeFile(newFile, text, (err) => {
+        if (err) {
+          callback(err);
+        } else {
+          callback(null, { id, text });
+        }
+      });
 
-    let newPath = (id) => (path.join(exports.dataDir, `${id}.txt`));
-
-    var newFile = newPath(paddedId);
-    fs.writeFile(newFile, text, (err) => {
-      if (err) {
-        throw ('error writing counter');
-      } else {
-        callback(null, { paddedId, text });
-      }
-    });
+    }
 
   });
 
 };
+
+
 
 exports.readAll = (callback) => {
   var data = _.map(items, (text, id) => {
@@ -35,6 +40,9 @@ exports.readAll = (callback) => {
   callback(null, data);
 };
 
+/*
+Next, refactor the readOne to read a todo item from the dataDir based on the message's id. For this function, you must read the contents of the todo item file and respond with it to the client.
+*/
 exports.readOne = (id, callback) => {
   var text = items[id];
   if (!text) {
