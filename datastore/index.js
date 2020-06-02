@@ -20,15 +20,22 @@ exports.create = (text, callback) => {
 // make a function that joins dataDir with id -> take in an id
   // join dataDir with id.txt
   // return ^
-  let newPath = (id) => (path.join(dataDir, `${id}.txt`));
+  console.log('this is inside create invocation of getUniqId')
+  let newPath = (id) => (path.join(exports.dataDir, `${id}.txt`));
 
    var newFile = newPath(paddedId);
-   fs.writeFile(newFile, text)
+   fs.writeFile(newFile, text, (err) => {
     if (err) {
       throw ('error writing counter');
     } else {
-      // callback(null, { id, text });
+      callback(null, { paddedId, text });
     }
+   });
+    // if (err) {
+    //   throw ('error writing counter');
+    // } else {
+    //   // callback(null, { id, text });
+    // }
 });
   // id = paddedID;
   // console.log('this is .create');
