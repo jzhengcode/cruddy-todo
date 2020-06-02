@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const sprintf = require('sprintf-js').sprintf;
 
-var counter = 0;
+// var counter = 0;
 
 // Private helper functions ////////////////////////////////////////////////////
 
@@ -38,20 +38,23 @@ const writeCounter = (count, callback) => {
 
 // Public API - Fix this function //////////////////////////////////////////////
 
-exports.getNextUniqueId = () => {
+exports.getNextUniqueId = (callback) => {
   // counter = counter + 1;
   // return zeroPaddedNumber(counter);
 
   // call readCounter, callback function
   readCounter((err, counter) => {
     counter++;
+    console.log('this is before write counter')
 
     writeCounter(counter, (err, result) => {
-      console.log(result);
-      return result;
+      callback(err, result);
     });
+
+    console.log('this is after write counter')
   });
 
+console.log("this is end of unique id ");
 };
 
 
