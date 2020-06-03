@@ -108,13 +108,41 @@ exports.readOne = (id, callback) => {
 };
 
 exports.update = (id, text, callback) => {
-  var item = items[id];
-  if (!item) {
-    callback(new Error(`No item with id: ${id}`));
-  } else {
-    items[id] = text;
-    callback(null, { id, text });
-  }
+  // var item = items[id];
+  // if (!item) {
+  //   callback(new Error(`No item with id: ${id}`));
+  // } else {
+  //   items[id] = text;
+  //   callback(null, { id, text });
+  // }
+
+  let searchDir = newPath(id)
+  fs.readFile(searchDir, (err)=>{
+    if(err){
+      callback(err)
+    }else{
+      fs.writeFile(searchDir, text, (err)=>{
+        if(err){
+          callback(err)
+        }else{
+          callback(null, {id, text})
+        }
+      })
+    }
+  })
+
+
+
+  // if err
+  //   callback(new Error(`No item with id: ${id}`));
+  // else
+  // if it is true then take that id and fs.writeFile
+  // if err
+  //   callback(err)
+  // else
+  // callback()
+
+
 };
 
 exports.delete = (id, callback) => {
