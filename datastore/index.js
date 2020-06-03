@@ -25,28 +25,9 @@ exports.create = (text, callback) => {
       });
 
     }
-    // console.log(paddedID);
-    // items[paddedID] = text;
-/*
- fs.writeFile(exports.dataDir, text, (err) => {
-   //somehow make the id the name of the file and store in text
- }
 
-*/
-// make a function that joins dataDir with id -> take in an id
-  // join dataDir with id.txt
-  // return ^
-
-    // if (err) {
-    //   throw ('error writing counter');
-    // } else {
-    //   // callback(null, { id, text });
-    // }
 });
-  // id = paddedID;
-  // console.log('this is .create');
-  // items[id] = text;
-  // callback(null, { id, text });
+
 };
 
 
@@ -54,32 +35,33 @@ exports.create = (text, callback) => {
 exports.readAll = (callback) => {
   // use fs.readdir to get a list of all files
     //take each file store it in an array
+let data=[];
+fs.readdir(exports.dataDir,(err,files) =>{
+  if(err) {
+    callback(err);
+  } else {
+    for(var i=0; i<files.length; i++){
 
-  var data = [];
-  data.push(fs.readdir((exports.dataDir,(err, data) => {
-    if (err) {
-      throw ('error reading all');
-    } else {
-      callback(null, data);
+      data.push({id: files[i].substr(0,5), text: files[i].substr(0,5)})
     }
-  })))
-  console.log(data);
-  // var data = _.map(items, (text, id) => {
-  //   return { id, text };
-  // });
 
-  // fs.readdir((exports.dataDir,(err) => {
+    callback(null, data);
+  }
+})
+
+  // var data = [];
+  // data.push(fs.readdir((exports.dataDir,(err, data) => {
   //   if (err) {
   //     throw ('error reading all');
   //   } else {
   //     callback(null, data);
   //   }
-  // })
+  // })))
+  // console.log(data);
+
 
 };
-/*
-Next, refactor the readOne to read a todo item from the dataDir based on the message's id. For this function, you must read the contents of the todo item file and respond with it to the client.
-*/
+
 exports.readOne = (id, callback) => {
   //use readfile
   var searchDir = newPath(id)
@@ -95,26 +77,11 @@ exports.readOne = (id, callback) => {
 
     }
   })
-  //and use the thingy thing thingy
-  //...?
-  //profit!
 
-  // var text = items[id];
-  // if (!text) {
-  //   callback(new Error(`No item with id: ${id}`));
-  // } else {
-  //   callback(null, { id, text });
-  // }
 };
 
 exports.update = (id, text, callback) => {
-  // var item = items[id];
-  // if (!item) {
-  //   callback(new Error(`No item with id: ${id}`));
-  // } else {
-  //   items[id] = text;
-  //   callback(null, { id, text });
-  // }
+
 
   let searchDir = newPath(id)
   fs.readFile(searchDir, (err)=>{
@@ -131,36 +98,17 @@ exports.update = (id, text, callback) => {
     }
   })
 
-
-
-  // if err
-  //   callback(new Error(`No item with id: ${id}`));
-  // else
-  // if it is true then take that id and fs.writeFile
-  // if err
-  //   callback(err)
-  // else
-  // callback()
-
-
 };
 
 exports.delete = (id, callback) => {
-  // var item = items[id];
-  // delete items[id];
-  // if (!item) {
-  //   // report an error if item not found
-  //   callback(new Error(`No item with id: ${id}`));
-  // } else {
-  //   callback();
-  // }
+
 
   let searchDir = newPath(id);
   fs.unlink(searchDir, (err) => {
     if(err){
-      callback(err)
+      callback(err);
     }else{
-      callback()
+      callback();
     }
   })
 
