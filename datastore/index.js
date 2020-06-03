@@ -7,6 +7,7 @@ const counter = require('./counter');
 // var items = {};
 
 // Public API - Fix these CRUD functions ///////////////////////////////////////
+let newPath = (fileName) => (path.join(exports.dataDir, `${fileName}.txt`));
 
 exports.create = (text, callback) => {
   counter.getNextUniqueId((err, id) => {
@@ -14,8 +15,6 @@ exports.create = (text, callback) => {
       // let's come back here later
       callback(err);
     } else {
-      let newPath = (id) => (path.join(exports.dataDir, `${id}.txt`));
-
       var newFile = newPath(id);
       fs.writeFile(newFile, text, (err) => {
       if (err) {
@@ -50,6 +49,8 @@ exports.create = (text, callback) => {
   // callback(null, { id, text });
 };
 
+
+
 exports.readAll = (callback) => {
   // use fs.readdir to get a list of all files
     //take each file store it in an array
@@ -80,12 +81,30 @@ exports.readAll = (callback) => {
 Next, refactor the readOne to read a todo item from the dataDir based on the message's id. For this function, you must read the contents of the todo item file and respond with it to the client.
 */
 exports.readOne = (id, callback) => {
-  var text = items[id];
-  if (!text) {
-    callback(new Error(`No item with id: ${id}`));
-  } else {
-    callback(null, { id, text });
-  }
+  //use readfile
+  var searchDir = newPath(id)
+  fs.readFile(searchDir, 'utf8', (err, todoText)=>{
+    if(err){
+      callback(err)
+    } else {
+      if (!todoText){
+        callback(new Error(`No item with id: ${id}`));
+      } else {
+        callback(null, {id, text: todoText});
+      }
+
+    }
+  })
+  //and use the thingy thing thingy
+  //...?
+  //profit!
+
+  // var text = items[id];
+  // if (!text) {
+  //   callback(new Error(`No item with id: ${id}`));
+  // } else {
+  //   callback(null, { id, text });
+  // }
 };
 
 exports.update = (id, text, callback) => {
